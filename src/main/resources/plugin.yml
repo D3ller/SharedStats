@@ -3,5 +3,5 @@ version: 1.0.0
 main: fr.korastrip.paperplugin.SharedStats
 author: Kora
 description: Shared your food and your health with your friends.
-website: https://github.com/D3ller/shared-stats/
+website: https://github.com/D3ller/SharedStats
 api-version: '26.2'
