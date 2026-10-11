@@ -4,25 +4,25 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import fr.korastrip.paperplugin.SharedStats;
-import fr.korastrip.paperplugin.commands.group.GroupSubcommand;
+import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.NoSuchElementException;
 
-public class Invite implements GroupSubcommand {
+public class Invite extends GroupSubCommand {
 
-    private final SharedStats plugin;
 
     public Invite(SharedStats plugin) {
-        this.plugin = plugin;
+        super(plugin, "invite", "Add a new player to your group", "invite [Player]");
     }
 
     @Override
@@ -39,17 +39,17 @@ public class Invite implements GroupSubcommand {
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                sender.sendRichMessage("<red>There currently no group, you can create one using: /sharedgroup create</red>");
+                                sender.sendRichMessage("<red>There is no group. Create one with <gold>/sharedgroup create</gold>.</red>");
                                 return Command.SINGLE_SUCCESS;
                             }
 
                             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                                sender.sendRichMessage("<red>You cannot invite a player bc you're not the owner.</red>");
+                                sender.sendRichMessage("<red>You cannot invite a player because you are not the owner.</red>");
                                 return Command.SINGLE_SUCCESS;
                             }
 
                             if (group.getIsPlaying()) {
-                                sender.sendRichMessage("<red>You can't invite someone when the game is already started.</red>");
+                                sender.sendRichMessage("<red>You cannot invite a player after the game has started.</red>");
                                 return Command.SINGLE_SUCCESS;
                             }
 
@@ -59,19 +59,21 @@ public class Invite implements GroupSubcommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                sender.sendRichMessage("<red>Unable to find the player</red>");
+                                sender.sendRichMessage("<red>Player not found.</red>");
                                 return 0;
                             }
 
                             if (group.getPlayersId().contains(target.getUniqueId())) {
-                                sender.sendRichMessage("<red>You cannot invite a player who is already in the group</red>");
+                                sender.sendRichMessage("<red>This player is already in the group.</red>");
                                 return Command.SINGLE_SUCCESS;
                             }
 
                             group.addPlayer(target.getUniqueId());
-                            target.sendRichMessage("<playername>, you've been added to the group, wait until the owner start the game", Placeholder.component("playername", target.displayName()));
 
-                            sender.sendRichMessage("<green><playername> has been added to the group.</green>", Placeholder.component("playername", target.displayName()));
+                            TagResolver.Single playerName = Placeholder.component("player", target.displayName());
+
+                            target.sendRichMessage("<green>You have been added to the group.</green> <white>Wait for the owner to start the game.</white>");
+                            sender.sendRichMessage("<green><gold><player></gold> has been added to the group.</green>", playerName);
 
                             return Command.SINGLE_SUCCESS;
                         }))
