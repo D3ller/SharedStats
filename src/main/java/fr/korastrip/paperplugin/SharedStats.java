@@ -1,10 +1,7 @@
 package fr.korastrip.paperplugin;
 
 import fr.korastrip.paperplugin.commands.group.GroupCommand;
-import fr.korastrip.paperplugin.listener.DamageListener;
-import fr.korastrip.paperplugin.listener.PlayerDeathListener;
-import fr.korastrip.paperplugin.listener.PlayerQuitListener;
-import fr.korastrip.paperplugin.listener.RegenerationListener;
+import fr.korastrip.paperplugin.listener.*;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.event.EventHandler;
@@ -28,10 +25,8 @@ public final class SharedStats extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
-        getServer().getPluginManager().registerEvents(
-                new RegenerationListener(this),
-                this
-        );
+        this.getServer().getPluginManager().registerEvents(new RegenerationListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(this), this);
 
         this.getLifecycleManager().registerEventHandler(
                 LifecycleEvents.COMMANDS,

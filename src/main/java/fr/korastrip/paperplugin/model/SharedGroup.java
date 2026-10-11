@@ -7,79 +7,88 @@ import java.util.*;
 
 public class SharedGroup {
 
-    private Set<UUID> playersId = new HashSet<UUID>();
-    public boolean isGroupDying = false;
+    private final Set<UUID> playersId = new HashSet<>();
     public Set<UUID> getPlayersId() {
-        return playersId;
-    }
-
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
-    }
-
-    public boolean getIsPlaying() {
-        return isPlaying;
-    }
-
-    public void setOwnerUuid(UUID ownerUuid) {
-        this.ownerUuid = ownerUuid;
-    }
-
-    public UUID getOwnerUuid() {
-        return ownerUuid;
+        return this.playersId;
     }
 
     private UUID ownerUuid;
+    public void setOwnerUuid(UUID ownerUuid) {
+        this.ownerUuid = ownerUuid;
+    }
+    public UUID getOwnerUuid() {
+        return this.ownerUuid;
+    }
+
     private boolean isPlaying = false;
-    private int deadCount = 0;
+    public boolean getIsPlaying() {
+        return this.isPlaying;
+    }
+
+
     private double groupHealth = 20.0;
+    public void setHealth(double health) {
+        this.groupHealth = health;
+    }
+    public double getHealth() {
+        return this.groupHealth;
+    }
+
+
     private double groupFood = 20.0;
+    private int deadCount = 0;
+    public int getDeadCount() {
+        return this.deadCount;
+    }
+
+    private final Set<UUID> respawnedPlayers = new HashSet<>();
+    public void addRespawnedPlayer(UUID playerId) {
+        respawnedPlayers.add(playerId);
+    }
+    public Set<UUID> getRespawnedPlayers() {
+        return respawnedPlayers;
+    }
+    public void clearRespawnedPlayers() {
+        respawnedPlayers.clear();
+    }
+
+    public boolean isGroupDying = false;
 
     public void addPlayer(UUID uuid) throws RuntimeException {
-        if (playersId.contains(uuid)) {
+        if (this.playersId.contains(uuid)) {
             throw new RuntimeException();
         }
 
-        playersId.add(uuid);
+        this.playersId.add(uuid);
     }
 
-    public boolean removePlayer(UUID uuid) {
-        return playersId.remove(uuid);
-    }
-
-    public boolean isPlaying() {
-        return isPlaying;
+    public void removePlayer(UUID uuid) {
+        this.playersId.remove(uuid);
     }
 
     public void startGame() {
-        if(isPlaying) {
+        if(this.isPlaying) {
             throw new RuntimeException();
         }
 
-        isPlaying = true;
-    }
-
-    public void setHealth(double health) {
-        groupHealth = health;
-    }
-
-    public double getHealth() {
-        return groupHealth;
+        this.isPlaying = true;
     }
 
     public void incrementsDeadCount() {
-        if(isPlaying) deadCount++;
+        if(this.isPlaying) this.deadCount++;
     }
 
     public void resetGroup() {
-        playersId.clear();
-        deadCount = 0;
-        ownerUuid = null;
-        isPlaying = false;
+        this.playersId.clear();
+        this.setHealth(20);
+        this.deadCount = 0;
+        this.ownerUuid = null;
+        this.isPlaying = false;
+        this.isGroupDying = false;
     }
 
     public List<Player> getOnlinePlayers() {
-        return playersId.stream()
+        return this.playersId.stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .toList();
