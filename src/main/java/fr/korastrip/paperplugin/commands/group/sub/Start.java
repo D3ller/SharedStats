@@ -4,23 +4,23 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
-import fr.korastrip.paperplugin.commands.group.GroupSubcommand;
+import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class Start implements GroupSubcommand {
+public class Start extends GroupSubCommand {
 
-    private final SharedStats plugin;
 
     public Start(SharedStats plugin) {
-        this.plugin = plugin;
+        super(plugin, "start", "Start the game and the synchronization", "");
     }
 
     @Override
@@ -35,13 +35,13 @@ public class Start implements GroupSubcommand {
                 return Command.SINGLE_SUCCESS;
             }
 
-            if(!player.getUniqueId().equals(group.getOwnerUuid())) {
-                sender.sendRichMessage("<red>You cannot execute this command</red>");
+            if (!player.getUniqueId().equals(group.getOwnerUuid())) {
+                sender.sendRichMessage("<red>You do not have permission to use this command.</red>");
                 return Command.SINGLE_SUCCESS;
             }
 
             if (group.getIsPlaying()) {
-                sender.sendRichMessage("<red>The group is already started, you can stop the game using : /<prefix> stop</red>", Placeholder.unparsed("prefix", Config.PREFIX));
+                sender.sendRichMessage("<red>The game has already started. Stop it with <gold>/<prefix> stop</gold>.</red>", Placeholder.unparsed("prefix", Config.PREFIX));
                 return Command.SINGLE_SUCCESS;
             }
 
@@ -49,7 +49,7 @@ public class Start implements GroupSubcommand {
             List<Player> players = group.getOnlinePlayers();
 
             if (players.size() < 2) {
-                sender.sendRichMessage("<red>You cannot start a game alone. Invite at least 1 players in your group.</red>");
+                sender.sendRichMessage("<red>You cannot start a game alone. Invite at least one player.</red>");
                 return Command.SINGLE_SUCCESS;
             }
 
@@ -57,7 +57,15 @@ public class Start implements GroupSubcommand {
             group.syncHealth();
 
             players.forEach(p -> {
-                p.sendRichMessage("<grey>The game has started, let's play !</grey>");
+
+                p.playSound(
+                        p.getLocation(),
+                        Sound.UI_TOAST_CHALLENGE_COMPLETE,
+                        1f,
+                        1f
+                );
+
+                p.sendRichMessage("<green>The game has started.</green> <white>Do not die!</white>");
             });
 
             group.startGame();

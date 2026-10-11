@@ -2,25 +2,18 @@ package fr.korastrip.paperplugin.commands.group.sub;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
-import fr.korastrip.paperplugin.commands.group.GroupSubcommand;
-import fr.korastrip.paperplugin.model.SharedGroup;
+import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-public class Version implements GroupSubcommand {
-
-    private final SharedStats plugin;
+public class Version extends GroupSubCommand {
 
     public Version(SharedStats plugin) {
-        this.plugin = plugin;
+        super(plugin, "version", "Get information about the version", "");
     }
 
     @Override
@@ -28,12 +21,12 @@ public class Version implements GroupSubcommand {
         return Commands.literal("version").executes(context -> {
             CommandSender sender = context.getSource().getSender();
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+            PluginMeta pluginMeta = plugin.getPluginMeta();
 
             sender.sendRichMessage(
-                    "<green><pluginname></green> <grey>V.<version> by Kora\nUpdated: " + dateFormat.format(Config.LAST_VERSION) + "</grey>",
-                    Placeholder.unparsed("version", plugin.getPluginMeta().getVersion()),
-                    Placeholder.unparsed("pluginname", plugin.getPluginMeta().getName())
+                    "<white><gold><pluginname></gold> is running version <gold><version></gold>.</white>",
+                    Placeholder.unparsed("version", pluginMeta.getVersion()),
+                    Placeholder.unparsed("pluginname", pluginMeta.getName())
             );
 
             return Command.SINGLE_SUCCESS;
