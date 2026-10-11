@@ -2,7 +2,9 @@ package fr.korastrip.paperplugin.listener;
 
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.model.SharedGroup;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -26,23 +28,17 @@ public class DamageListener implements Listener {
 
             SharedGroup group = this.plugin.getGroup();
 
+            if (!group.getIsPlaying()) return;
+            if (!group.getPlayersId().contains(player.getUniqueId())) return;
+
             if (group.isGroupDying) {
                 event.setCancelled(true);
                 return;
             }
 
-            if(!group.getIsPlaying()) return;
-            if(!group.getPlayersId().contains(player.getUniqueId())) return;
-
             var finalDamage = event.getFinalDamage();
             event.setCancelled(true);
             var newHealth = group.getHealth() - finalDamage;
-
-            Bukkit.getLogger().info(
-                    "Playing: " + group.getIsPlaying()
-                            + " | Group HP: " + group.getHealth()
-                            + " | Damage: " + finalDamage
-            );
 
             List<Player> players = group.getOnlinePlayers();
 
@@ -52,13 +48,26 @@ public class DamageListener implements Listener {
                 Bukkit.getScheduler().runTask(
                         plugin,
                         () -> {
-                            players.forEach(Player::kill);
-                            group.isGroupDying = false;
+                            if (group.getIsPlaying()) {
+                                players.forEach(Player::kill);
+                            }
                         }
                 );
 
+                final Component mainTitle = player.displayName()
+                        .color(NamedTextColor.RED);
+                final Component subtitle = Component.text("is dead", NamedTextColor.WHITE);
+                final Title title = Title.title(mainTitle, subtitle);
+
                 players.forEach(p -> {
-                    p.sendRichMessage("<red>The player <playername> died. So every players got killed.</red>", Placeholder.component("playername", player.displayName()));
+                    p.showTitle(title);
+
+                    p.playSound(
+                            p.getLocation(),
+                            Sound.ENTITY_WITHER_SPAWN,
+                            1.0f,
+                            1.0f
+                    );
                 });
                 group.incrementsDeadCount();
 
