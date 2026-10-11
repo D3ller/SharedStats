@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Check the release version
+        shell: bash
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          gradle_version="$(./gradlew properties -q | sed -n 's/^version: //p')"
+
+          if [[ "$tag_version" != "$gradle_version" ]]; then
+            echo "Tag version $tag_version does not match Gradle version $gradle_version."
+            exit 1
+          fi
+
+      - name: Build the plugin
+        run: ./gradlew build
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          build/libs/*.jar
+          --verify-tag
+          --generate-notes
+          --title "$GITHUB_REF_NAME"
