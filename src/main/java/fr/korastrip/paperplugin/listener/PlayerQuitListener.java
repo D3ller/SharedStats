@@ -31,7 +31,7 @@ public class PlayerQuitListener implements Listener {
                         .forEach(uuid -> {
                             Player player = Bukkit.getPlayer(uuid);
                             if (player != null) {
-                                player.sendRichMessage("<grey>The group owner has leave, so the group has been disband </grey>");
+                                player.sendRichMessage("<white>The group has been disbanded because its owner left.</white>");
                             }
                         });
 
@@ -39,6 +39,12 @@ public class PlayerQuitListener implements Listener {
                 return;
             }
             group.removePlayer(playerId);
+            if (group.getIsPlaying() && group.getOnlinePlayers().size() < 2) {
+                group.getOnlinePlayers().forEach(p -> {
+                    p.sendRichMessage("<white>The group has been disbanded because there are not enough players to continue.</white>");
+                });
+                group.resetGroup();
+            }
         }
     }
 }
