@@ -1,0 +1,21 @@
+name: Main source branch
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+
+jobs:
+  source-branch:
+    name: Source branch must be develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify pull request source
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: test "$HEAD_REF" = develop

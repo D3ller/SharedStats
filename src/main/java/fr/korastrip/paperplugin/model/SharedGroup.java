@@ -9,7 +9,7 @@ public class SharedGroup {
 
     private final Set<UUID> playersId = new HashSet<>();
     public Set<UUID> getPlayersId() {
-        return this.playersId;
+        return Collections.unmodifiableSet(this.playersId);
     }
 
     private UUID ownerUuid;
@@ -43,20 +43,20 @@ public class SharedGroup {
 
     private final Set<UUID> respawnedPlayers = new HashSet<>();
     public void addRespawnedPlayer(UUID playerId) {
-        respawnedPlayers.add(playerId);
+        this.respawnedPlayers.add(playerId);
     }
     public Set<UUID> getRespawnedPlayers() {
-        return respawnedPlayers;
+        return Collections.unmodifiableSet(this.respawnedPlayers);
     }
     public void clearRespawnedPlayers() {
-        respawnedPlayers.clear();
+        this.respawnedPlayers.clear();
     }
 
     public boolean isGroupDying = false;
 
-    public void addPlayer(UUID uuid) throws RuntimeException {
+    public void addPlayer(UUID uuid) {
         if (this.playersId.contains(uuid)) {
-            throw new RuntimeException();
+            throw new IllegalArgumentException();
         }
 
         this.playersId.add(uuid);
@@ -68,7 +68,7 @@ public class SharedGroup {
 
     public void startGame() {
         if(this.isPlaying) {
-            throw new RuntimeException();
+            throw new IllegalStateException();
         }
 
         this.isPlaying = true;
@@ -79,12 +79,16 @@ public class SharedGroup {
     }
 
     public void resetGroup() {
+        this.resetStats();
         this.playersId.clear();
-        this.setHealth(20);
-        this.deadCount = 0;
         this.ownerUuid = null;
-        this.isPlaying = false;
+    }
+
+    public void resetStats() {
+        this.deadCount = 0;
         this.isGroupDying = false;
+        this.isPlaying = false;
+        this.respawnedPlayers.clear();
     }
 
     public List<Player> getOnlinePlayers() {
