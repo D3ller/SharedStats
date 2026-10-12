@@ -13,12 +13,12 @@
 | `/sharedgroup remove [player]` | Remove a player from your group | OP, group owner |
 | `/sharedgroup revoke` | Delete the group and remove all its players | OP, group owner |
 | `/sharedgroup start` | Start the game and stat synchronization | OP, group owner |
+| `/sharedgroup stop` | Stop an active game without deleting the group | Group owner |
 | `/sharedgroup players` | List the online players in your group | Group member |
 | `/sharedgroup version` | Display the plugin version | None |
 
 ## What remains to be done
 
-- Add the `/sharedgroup stop` command.
 - Synchronize players' food levels and saturation.
 - Add automated tests for the group lifecycle and stat synchronization.
 
