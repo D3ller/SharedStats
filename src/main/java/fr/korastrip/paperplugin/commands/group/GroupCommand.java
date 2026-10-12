@@ -20,6 +20,7 @@ public class GroupCommand {
                 .then(new Invite(plugin).build())
                 .then(new Create(plugin).build())
                 .then(new Start(plugin).build())
+                .then(new Stop(plugin).build())
                 .then(new Version(plugin).build())
                 .then(new Remove(plugin).build())
                 .then(new Remove(plugin).build())
