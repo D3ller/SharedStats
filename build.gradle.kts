@@ -1,9 +1,21 @@
 plugins {
     id("java")
+    id("com.modrinth.minotaur") version "2.10.0"
 }
 
 group = "fr.korastrip.sharedstats"
-version = "1.0.0"
+version = "1.0.1"
+
+modrinth {
+    projectId.set("c9FDN1zY")
+    versionNumber.set(project.version.toString())
+    versionType.set("release")
+    uploadFile.set(tasks.jar)
+    changelog.set(providers.environmentVariable("MODRINTH_CHANGELOG").orElse("Release ${project.version}"))
+
+    gameVersions.addAll("26.2")
+    loaders.add("paper")
+}
 
 repositories {
     mavenCentral()
