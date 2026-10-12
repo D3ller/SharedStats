@@ -37,6 +37,7 @@ public class Help extends GroupSubCommand {
                     new Invite(plugin),
                     new Remove(plugin),
                     new Start(plugin),
+                    new Stop(plugin),
                     new Players(plugin),
                     new Version(plugin)
             );
