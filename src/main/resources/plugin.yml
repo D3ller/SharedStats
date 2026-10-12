@@ -1,5 +1,5 @@
 name: SharedHealth
-version: 1.0.0
+version: 1.0.1
 main: fr.korastrip.paperplugin.SharedStats
 author: Kora
 description: Shared your food and your health with your friends.
