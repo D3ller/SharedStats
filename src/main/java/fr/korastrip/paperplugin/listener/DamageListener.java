@@ -68,6 +68,8 @@ public class DamageListener implements Listener {
                 final Component subtitle = Component.text("is dead", NamedTextColor.WHITE);
                 final Title title = Title.title(mainTitle, subtitle);
 
+                group.addPlayerDeath(player);
+
                 players.forEach(p -> {
                     p.showTitle(title);
 
