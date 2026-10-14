@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.korastrip.sharedstats"
-version = "1.0.1"
+version = "1.0.2"
 
 modrinth {
     projectId.set("c9FDN1zY")
