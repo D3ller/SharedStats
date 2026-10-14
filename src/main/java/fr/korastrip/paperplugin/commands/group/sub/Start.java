@@ -2,13 +2,12 @@ package fr.korastrip.paperplugin.commands.group.sub;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -36,18 +35,18 @@ public class Start extends GroupSubCommand {
             }
 
             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                return this.generateError("You do not have permission to use this command.", sender);
+                return this.generateError(ErrorMessage.NOT_OWNER, sender);
             }
 
             if (group.getIsPlaying()) {
-                return this.generateError("The game has already started. Stop it with <gold>/<prefix> stop</gold>.", sender, Placeholder.unparsed("prefix", Config.PREFIX));
+                return this.generateError(ErrorMessage.GAME_RUNNING, sender);
             }
 
 
             List<Player> players = group.getOnlinePlayers();
 
             if (players.size() < 2) {
-                return this.generateError("You cannot start a game alone. Invite at least one player.", sender);
+                return this.generateError(ErrorMessage.NOT_ENOUGH_PLAYERS, sender);
             }
 
             group.setHealth(20.0);

@@ -3,9 +3,9 @@ package fr.korastrip.paperplugin.commands.group.sub;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -38,15 +38,15 @@ public class Remove extends GroupSubCommand {
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                return this.generateError("There is no group. Create one with <gold>/sharedgroup create</gold>.", sender);
+                                return this.generateError(ErrorMessage.NO_GROUP, sender);
                             }
 
                             if (!group.getOwnerUuid().equals(player.getUniqueId())) {
-                                return this.generateError("You do not have permission to use this command.", sender);
+                                return this.generateError(ErrorMessage.NOT_OWNER, sender);
                             }
 
                             if (group.getIsPlaying()) {
-                                return this.generateError("You cannot remove a player during the game.", sender);
+                                return this.generateError(ErrorMessage.GAME_RUNNING, sender);
                             }
 
                             final PlayerSelectorArgumentResolver resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -55,15 +55,15 @@ public class Remove extends GroupSubCommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                return this.generateError("Player not found.", sender);
+                                return this.generateError(ErrorMessage.PLAYER_NOT_FOUND, sender);
                             }
 
                             if (target.getUniqueId().equals(player.getUniqueId())) {
-                                return this.generateError("You cannot remove yourself. Use <gold>/" + Config.PREFIX + " revoke</gold> instead.", sender);
+                                return this.generateError(ErrorMessage.CANNOT_REMOVE_YOURSELF, sender);
                             }
 
                             if (!group.getPlayersId().contains(target.getUniqueId())) {
-                                return this.generateError("This player is not in the group.", sender);
+                                return this.generateError(ErrorMessage.PLAYER_NOT_IN_GROUP, sender);
                             }
 
                             group.removePlayer(target.getUniqueId());

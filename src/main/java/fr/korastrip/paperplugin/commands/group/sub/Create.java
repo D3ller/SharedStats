@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -33,7 +34,7 @@ public class Create extends GroupSubCommand {
                     }
 
                     if(!group.getPlayersId().isEmpty()) {
-                        return this.generateError("A group already exists. You cannot create another one.", sender);
+                        return this.generateError(ErrorMessage.GROUP_ALREADY_EXISTS, sender);
                     }
 
                     UUID playerUUID = player.getUniqueId();

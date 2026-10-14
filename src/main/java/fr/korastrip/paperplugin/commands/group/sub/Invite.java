@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -39,15 +40,15 @@ public class Invite extends GroupSubCommand {
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                return this.generateError("There is no group. Create one with <gold>/sharedgroup create</gold>.", sender);
+                                return this.generateError(ErrorMessage.NO_GROUP, sender);
                             }
 
                             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                                return this.generateError("You cannot invite a player because you are not the owner.", sender);
+                                return this.generateError(ErrorMessage.NOT_OWNER, sender);
                             }
 
                             if (group.getIsPlaying()) {
-                                return this.generateError("You cannot invite a player after the game has started.", sender);
+                                return this.generateError(ErrorMessage.GAME_RUNNING, sender);
                             }
 
                             final PlayerSelectorArgumentResolver resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -56,11 +57,11 @@ public class Invite extends GroupSubCommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                return this.generateError("Player not found.", sender);
+                                return this.generateError(ErrorMessage.PLAYER_NOT_FOUND, sender);
                             }
 
                             if (group.getPlayersId().contains(target.getUniqueId())) {
-                                return this.generateError("This player is already in the group.", sender);
+                                return this.generateError(ErrorMessage.PLAYER_ALREADY_IN_GROUP, sender);
                             }
 
                             group.addPlayer(target.getUniqueId());

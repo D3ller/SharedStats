@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -33,15 +34,15 @@ public class Stop extends GroupSubCommand {
             }
 
             if(!group.getPlayersId().contains(player.getUniqueId())) {
-                return this.generateError("You cannot interact with the group, you are not into", sender);
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, sender);
             }
 
             if(!player.getUniqueId().equals(group.getOwnerUuid())) {
-                return this.generateError("Only owners can do this action", sender);
+                return this.generateError(ErrorMessage.NOT_OWNER, sender);
             }
 
             if(!group.getIsPlaying()) {
-                return this.generateError("You cannot stop a game that's not already started", sender);
+                return this.generateError(ErrorMessage.NO_GAME_RUNNING, sender);
             }
 
             player.sendRichMessage("You're game has been stopped.\nTo restart: <gold>/" + Config.PREFIX + " start</gold>");

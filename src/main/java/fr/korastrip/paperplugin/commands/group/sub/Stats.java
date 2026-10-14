@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -31,11 +32,11 @@ public class Stats extends GroupSubCommand {
             }
 
             if(!group.getPlayersId().contains(player.getUniqueId())) {
-                return this.generateError("You do not have permission to use this command.", player);
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, player);
             }
 
             if(!group.getIsPlaying()) {
-                return this.generateError("Currently there not game launched.", player);
+                return this.generateError(ErrorMessage.NO_GAME_RUNNING, player);
             }
 
             var playerPerScore = group.getOnlinePlayers().stream().sorted(Comparator.comparingInt(group::getPlayerDeaths).reversed()).toList();

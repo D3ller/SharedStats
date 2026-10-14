@@ -3,6 +3,7 @@ package fr.korastrip.paperplugin.commands.group;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
@@ -33,6 +34,10 @@ public abstract class GroupSubCommand {
     public int generateError(String message, CommandSender player, TagResolver... resolvers) {
         player.sendRichMessage("<red>" + message + "</red>", resolvers);
         return 0;
+    }
+
+    public int generateError(ErrorMessage error, CommandSender player) {
+        return this.generateError(error.getMessage(), player);
     }
 
     public String getUsage() {

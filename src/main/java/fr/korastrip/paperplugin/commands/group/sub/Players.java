@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -29,7 +30,7 @@ public class Players extends GroupSubCommand {
             }
 
             if (!group.getPlayersId().contains(player.getUniqueId())) {
-                return this.generateError("You do not have permission to use this command.", player);
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, player);
             }
 
             var players = group.getOnlinePlayers();
