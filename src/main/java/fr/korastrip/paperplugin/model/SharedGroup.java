@@ -43,7 +43,7 @@ public class SharedGroup {
     }
 
 
-    private double groupFood = 20.0;
+    private final double groupFood = 20.0;
     private int deadCount = 0;
 
     public int getDeadCount() {
@@ -113,9 +113,7 @@ public class SharedGroup {
     }
 
     public void syncHealth() {
-        this.getOnlinePlayers().forEach(p -> {
-            p.setHealth(this.getHealth());
-        });
+        this.getOnlinePlayers().forEach(p -> p.setHealth(this.getHealth()));
     }
 
     public void addPlayerDeath(Player player) {
