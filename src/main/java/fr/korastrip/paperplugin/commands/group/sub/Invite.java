@@ -13,8 +13,6 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.NoSuchElementException;
@@ -31,24 +29,23 @@ public class Invite extends GroupSubCommand {
         return Commands.literal("invite")
                 .then(Commands.argument("player", ArgumentTypes.player())
                         .executes(context -> {
-                            CommandSender sender = context.getSource().getSender();
-                            Entity executor = context.getSource().getExecutor();
+                            ContextResult ctx = this.getContext(context);
                             SharedGroup group = this.plugin.getGroup();
 
-                            if (!(executor instanceof Player player)) {
+                            if (!(ctx.entity() instanceof Player player)) {
                                 return Command.SINGLE_SUCCESS;
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                return this.generateError(ErrorMessage.NO_GROUP, sender);
+                                return this.generateError(ErrorMessage.NO_GROUP, ctx.sender());
                             }
 
                             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                                return this.generateError(ErrorMessage.NOT_OWNER, sender);
+                                return this.generateError(ErrorMessage.NOT_OWNER, ctx.sender());
                             }
 
                             if (group.getIsPlaying()) {
-                                return this.generateError(ErrorMessage.GAME_RUNNING, sender);
+                                return this.generateError(ErrorMessage.GAME_RUNNING, ctx.sender());
                             }
 
                             final PlayerSelectorArgumentResolver resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -57,11 +54,11 @@ public class Invite extends GroupSubCommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                return this.generateError(ErrorMessage.PLAYER_NOT_FOUND, sender);
+                                return this.generateError(ErrorMessage.PLAYER_NOT_FOUND, ctx.sender());
                             }
 
                             if (group.getPlayersId().contains(target.getUniqueId())) {
-                                return this.generateError(ErrorMessage.PLAYER_ALREADY_IN_GROUP, sender);
+                                return this.generateError(ErrorMessage.PLAYER_ALREADY_IN_GROUP, ctx.sender());
                             }
 
                             group.addPlayer(target.getUniqueId());
@@ -69,7 +66,7 @@ public class Invite extends GroupSubCommand {
                             TagResolver.Single playerName = Placeholder.component("player", target.displayName());
 
                             target.sendRichMessage("<green>You have been added to the group.</green> <white>Wait for the owner to start the game.</white>");
-                            sender.sendRichMessage("<green><gold><player></gold> has been added to the group.</green>", playerName);
+                            ctx.sender().sendRichMessage("<green><gold><player></gold> has been added to the group.</green>", playerName);
 
                             return Command.SINGLE_SUCCESS;
                         }))

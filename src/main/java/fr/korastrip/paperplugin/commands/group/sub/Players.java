@@ -9,7 +9,6 @@ import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class Players extends GroupSubCommand {
@@ -22,10 +21,10 @@ public class Players extends GroupSubCommand {
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return Commands.literal("players").executes(context -> {
 
-            Entity executor = context.getSource().getExecutor();
+            ContextResult ctx = this.getContext(context);
             SharedGroup group = this.plugin.getGroup();
 
-            if (!(executor instanceof Player player)) {
+            if (!(ctx.entity() instanceof Player player)) {
                 return Command.SINGLE_SUCCESS;
             }
 

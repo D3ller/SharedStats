@@ -8,7 +8,6 @@ import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class Revoke extends GroupSubCommand {
@@ -22,10 +21,10 @@ public class Revoke extends GroupSubCommand {
         return Commands.literal("revoke")
                 .executes(context -> {
 
-                    Entity executor = context.getSource().getExecutor();
+                    ContextResult ctx = this.getContext(context);
                     SharedGroup group = this.plugin.getGroup();
 
-                    if (!(executor instanceof Player player)) {
+                    if (!(ctx.entity() instanceof Player player)) {
                         return Command.SINGLE_SUCCESS;
                     }
 
