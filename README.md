@@ -19,6 +19,7 @@
 | `/sharedgroup start` | Start the game and stat synchronization | OP, group owner |
 | `/sharedgroup stop` | Stop an active game without deleting the group | Group owner |
 | `/sharedgroup players` | List the online players in your group | Group member |
+| `/sharedgroup leaderboard` | Show the group's death leaderboard during a game | Group member |
 | `/sharedgroup version` | Display the plugin version | None |
 
 ## What remains to be done
