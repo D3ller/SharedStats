@@ -25,6 +25,8 @@ public class GroupCommand {
                 .then(new Remove(plugin).build())
                 .then(new Remove(plugin).build())
                 .then(new Players(plugin).build())
+                .then(new Enable(plugin).build())
+                .then(new Disable(plugin).build())
                 .build();
 
     }

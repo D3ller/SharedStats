@@ -13,21 +13,31 @@ public final class SharedStats extends JavaPlugin implements Listener {
 
     private final SharedGroup group = new SharedGroup();
     GroupCommand groupCommand = new GroupCommand(this);
+    private SynchronizationConfig synchronizationConfig;
 
     public SharedGroup getGroup() {
         return group;
     }
+    public SynchronizationConfig getSynchronizationConfig() {
+        return synchronizationConfig;
+    }
+
+
+
 
     @Override
     public void onEnable() {
-
+        synchronizationConfig = new SynchronizationConfig(this);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         this.getServer().getPluginManager().registerEvents(new RegenerationListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(this), this);
-
+        this.getServer().getPluginManager()
+                .registerEvents(new FoodSynchronizationListener(this), this);
+        this.getServer().getPluginManager()
+                .registerEvents(new PotionSynchronizationListener(this), this);
         this.getLifecycleManager().registerEventHandler(
                 LifecycleEvents.COMMANDS,
                 event -> event.registrar().register(groupCommand.create())

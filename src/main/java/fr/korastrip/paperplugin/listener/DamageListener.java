@@ -27,7 +27,7 @@ public class DamageListener implements Listener {
         if (event.getEntity() instanceof Player player) {
 
             SharedGroup group = this.plugin.getGroup();
-
+            if (!plugin.getSynchronizationConfig().isEnabled("health")) return;
             if (!group.getIsPlaying()) return;
             if (!group.getPlayersId().contains(player.getUniqueId())) return;
 
