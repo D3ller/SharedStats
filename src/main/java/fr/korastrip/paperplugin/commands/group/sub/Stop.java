@@ -10,8 +10,6 @@ import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class Stop extends GroupSubCommand {
@@ -26,23 +24,22 @@ public class Stop extends GroupSubCommand {
 
             SharedGroup group = this.plugin.getGroup();
 
-            CommandSender sender = context.getSource().getSender();
-            Entity executor = context.getSource().getExecutor();
+            ContextResult ctx = this.getContext(context);
 
-            if (!(executor instanceof Player player)) {
+            if (!(ctx.entity() instanceof Player player)) {
                 return Command.SINGLE_SUCCESS;
             }
 
             if(!group.getPlayersId().contains(player.getUniqueId())) {
-                return this.generateError(ErrorMessage.NOT_IN_GROUP, sender);
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, ctx.sender());
             }
 
             if(!player.getUniqueId().equals(group.getOwnerUuid())) {
-                return this.generateError(ErrorMessage.NOT_OWNER, sender);
+                return this.generateError(ErrorMessage.NOT_OWNER, ctx.sender());
             }
 
             if(!group.getIsPlaying()) {
-                return this.generateError(ErrorMessage.NO_GAME_RUNNING, sender);
+                return this.generateError(ErrorMessage.NO_GAME_RUNNING, ctx.sender());
             }
 
             player.sendRichMessage("You're game has been stopped.\nTo restart: <gold>/" + Config.PREFIX + " start</gold>");

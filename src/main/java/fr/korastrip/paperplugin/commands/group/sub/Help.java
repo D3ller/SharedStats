@@ -7,8 +7,6 @@ import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -24,10 +22,9 @@ public class Help extends GroupSubCommand {
 
         return Commands.literal("help").executes(context -> {
 
-            CommandSender sender = context.getSource().getSender();
-            Entity executor = context.getSource().getExecutor();
+            ContextResult ctx = this.getContext(context);
 
-            if (!(executor instanceof Player)) {
+            if (!(ctx.entity() instanceof Player)) {
                 return Command.SINGLE_SUCCESS;
             }
 
@@ -43,7 +40,7 @@ public class Help extends GroupSubCommand {
                     new Stats(plugin)
             );
 
-            commands.forEach(command -> sender.sendRichMessage("<gold><usage></gold><white>: <description></white>", Placeholder.unparsed("description", command.getDescription()), Placeholder.unparsed("usage", command.getUsage())));
+            commands.forEach(command -> ctx.sender().sendRichMessage("<gold><usage></gold><white>: <description></white>", Placeholder.unparsed("description", command.getDescription()), Placeholder.unparsed("usage", command.getUsage())));
 
             return Command.SINGLE_SUCCESS;
         });
