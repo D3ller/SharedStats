@@ -38,18 +38,15 @@ public class Remove extends GroupSubCommand {
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                sender.sendRichMessage("<red>There is no group. Create one with <gold>/sharedgroup create</gold>.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("There is no group. Create one with <gold>/sharedgroup create</gold>.", sender);
                             }
 
                             if (!group.getOwnerUuid().equals(player.getUniqueId())) {
-                                sender.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("You do not have permission to use this command.", sender);
                             }
 
                             if (group.getIsPlaying()) {
-                                sender.sendRichMessage("<red>You cannot remove a player during the game.</red>");
-                                return 0;
+                                return this.generateError("You cannot remove a player during the game.", sender);
                             }
 
                             final PlayerSelectorArgumentResolver resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -58,18 +55,15 @@ public class Remove extends GroupSubCommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                sender.sendRichMessage("<red>Player not found.</red>");
-                                return 0;
+                                return this.generateError("Player not found.", sender);
                             }
 
                             if (target.getUniqueId().equals(player.getUniqueId())) {
-                                sender.sendRichMessage("<red>You cannot remove yourself. Use <gold>/" + Config.PREFIX + " revoke</gold> instead.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("You cannot remove yourself. Use <gold>/" + Config.PREFIX + " revoke</gold> instead.", sender);
                             }
 
                             if (!group.getPlayersId().contains(target.getUniqueId())) {
-                                sender.sendRichMessage("<red>This player is not in the group.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("This player is not in the group.", sender);
                             }
 
                             group.removePlayer(target.getUniqueId());

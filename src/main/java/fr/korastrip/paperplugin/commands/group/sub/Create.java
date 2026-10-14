@@ -33,8 +33,7 @@ public class Create extends GroupSubCommand {
                     }
 
                     if(!group.getPlayersId().isEmpty()) {
-                        sender.sendRichMessage("<red>A group already exists. You cannot create another one.</red>");
-                        return Command.SINGLE_SUCCESS;
+                        return this.generateError("A group already exists. You cannot create another one.", sender);
                     }
 
                     UUID playerUUID = player.getUniqueId();

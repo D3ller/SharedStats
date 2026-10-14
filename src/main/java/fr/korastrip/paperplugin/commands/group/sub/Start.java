@@ -36,21 +36,18 @@ public class Start extends GroupSubCommand {
             }
 
             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                sender.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                return Command.SINGLE_SUCCESS;
+                return this.generateError("You do not have permission to use this command.", sender);
             }
 
             if (group.getIsPlaying()) {
-                sender.sendRichMessage("<red>The game has already started. Stop it with <gold>/<prefix> stop</gold>.</red>", Placeholder.unparsed("prefix", Config.PREFIX));
-                return Command.SINGLE_SUCCESS;
+                return this.generateError("The game has already started. Stop it with <gold>/<prefix> stop</gold>.", sender, Placeholder.unparsed("prefix", Config.PREFIX));
             }
 
 
             List<Player> players = group.getOnlinePlayers();
 
             if (players.size() < 2) {
-                sender.sendRichMessage("<red>You cannot start a game alone. Invite at least one player.</red>");
-                return Command.SINGLE_SUCCESS;
+                return this.generateError("You cannot start a game alone. Invite at least one player.", sender);
             }
 
             group.setHealth(20.0);

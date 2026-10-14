@@ -29,8 +29,7 @@ public class Revoke extends GroupSubCommand {
                     }
 
                     if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                        player.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                        return Command.SINGLE_SUCCESS;
+                        return this.generateError("You do not have permission to use this command.", player);
                     }
 
                     group.getOnlinePlayers().forEach(p -> {

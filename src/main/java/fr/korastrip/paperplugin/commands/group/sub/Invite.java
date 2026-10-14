@@ -39,18 +39,15 @@ public class Invite extends GroupSubCommand {
                             }
 
                             if (group.getPlayersId().isEmpty()) {
-                                sender.sendRichMessage("<red>There is no group. Create one with <gold>/sharedgroup create</gold>.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("There is no group. Create one with <gold>/sharedgroup create</gold>.", sender);
                             }
 
                             if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                                sender.sendRichMessage("<red>You cannot invite a player because you are not the owner.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("You cannot invite a player because you are not the owner.", sender);
                             }
 
                             if (group.getIsPlaying()) {
-                                sender.sendRichMessage("<red>You cannot invite a player after the game has started.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("You cannot invite a player after the game has started.", sender);
                             }
 
                             final PlayerSelectorArgumentResolver resolver = context.getArgument("player", PlayerSelectorArgumentResolver.class);
@@ -59,13 +56,11 @@ public class Invite extends GroupSubCommand {
                             try {
                                 target = resolver.resolve(context.getSource()).getFirst();
                             } catch (CommandSyntaxException | NoSuchElementException e) {
-                                sender.sendRichMessage("<red>Player not found.</red>");
-                                return 0;
+                                return this.generateError("Player not found.", sender);
                             }
 
                             if (group.getPlayersId().contains(target.getUniqueId())) {
-                                sender.sendRichMessage("<red>This player is already in the group.</red>");
-                                return Command.SINGLE_SUCCESS;
+                                return this.generateError("This player is already in the group.", sender);
                             }
 
                             group.addPlayer(target.getUniqueId());

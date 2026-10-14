@@ -29,8 +29,7 @@ public class Players extends GroupSubCommand {
             }
 
             if (!group.getPlayersId().contains(player.getUniqueId())) {
-                player.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                return 0;
+                return this.generateError("You do not have permission to use this command.", player);
             }
 
             var players = group.getOnlinePlayers();

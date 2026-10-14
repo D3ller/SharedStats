@@ -33,18 +33,15 @@ public class Stop extends GroupSubCommand {
             }
 
             if(!group.getPlayersId().contains(player.getUniqueId())) {
-                sender.sendRichMessage("<red>You cannot interact with the group, you are not into</red>");
-                return 0;
+                return this.generateError("You cannot interact with the group, you are not into", sender);
             }
 
             if(!player.getUniqueId().equals(group.getOwnerUuid())) {
-                sender.sendRichMessage("<red>Only owners can do this action</red>");
-                return 0;
+                return this.generateError("Only owners can do this action", sender);
             }
 
             if(!group.getIsPlaying()) {
-                sender.sendRichMessage("<red>You cannot stop a game that's not already started</red>");
-                return 0;
+                return this.generateError("You cannot stop a game that's not already started", sender);
             }
 
             player.sendRichMessage("You're game has been stopped.\nTo restart: <gold>/" + Config.PREFIX + " start</gold>");

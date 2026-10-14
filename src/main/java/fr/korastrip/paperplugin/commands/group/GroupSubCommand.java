@@ -4,7 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.Config;
 import fr.korastrip.paperplugin.SharedStats;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
 
 public abstract class GroupSubCommand {
@@ -30,8 +30,8 @@ public abstract class GroupSubCommand {
         return description;
     }
 
-    public int generateError(String message, CommandSender player) {
-        player.sendRichMessage("<red><message></red>", Placeholder.unparsed("message", message));
+    public int generateError(String message, CommandSender player, TagResolver... resolvers) {
+        player.sendRichMessage("<red>" + message + "</red>", resolvers);
         return 0;
     }
 
