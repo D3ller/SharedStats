@@ -25,6 +25,7 @@ public class GroupCommand {
                 .then(new Remove(plugin).build())
                 .then(new Remove(plugin).build())
                 .then(new Players(plugin).build())
+                .then(new Stats(plugin).build())
                 .build();
 
     }
