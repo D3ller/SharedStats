@@ -53,10 +53,8 @@ public class Start extends GroupSubCommand {
                 return Command.SINGLE_SUCCESS;
             }
 
-            if (plugin.getSynchronizationConfig().isEnabled("health")) {
-                group.setHealth(20.0);
-                group.syncHealth();
-            }
+            group.setHealth(20.0);
+            group.syncHealth();
 
             players.forEach(p -> {
 
