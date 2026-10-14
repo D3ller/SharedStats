@@ -23,8 +23,9 @@ public class GroupCommand {
                 .then(new Stop(plugin).build())
                 .then(new Version(plugin).build())
                 .then(new Remove(plugin).build())
-                .then(new Remove(plugin).build())
+                .then(new Revoke(plugin).build())
                 .then(new Players(plugin).build())
+                .then(new Stats(plugin).build())
                 .build();
 
     }

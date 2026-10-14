@@ -2,6 +2,7 @@ package fr.korastrip.paperplugin.listener;
 
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.model.SharedGroup;
+import fr.korastrip.paperplugin.services.TotemService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -37,12 +38,21 @@ public class DamageListener implements Listener {
             }
 
             var finalDamage = event.getFinalDamage();
-            event.setCancelled(true);
+            event.setDamage(0);
+
             var newHealth = group.getHealth() - finalDamage;
 
             List<Player> players = group.getOnlinePlayers();
 
             if (newHealth <= 0) {
+
+                TotemService totemService = new TotemService(plugin);
+
+                if(totemService.check()) {
+                    totemService.applyEffect();
+                    return;
+                }
+
                 group.isGroupDying = true;
 
                 Bukkit.getScheduler().runTask(
@@ -58,6 +68,8 @@ public class DamageListener implements Listener {
                         .color(NamedTextColor.RED);
                 final Component subtitle = Component.text("is dead", NamedTextColor.WHITE);
                 final Title title = Title.title(mainTitle, subtitle);
+
+                group.addPlayerDeath(player);
 
                 players.forEach(p -> {
                     p.showTitle(title);
