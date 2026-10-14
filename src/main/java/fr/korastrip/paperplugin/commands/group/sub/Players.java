@@ -4,11 +4,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class Players extends GroupSubCommand {
@@ -21,16 +21,15 @@ public class Players extends GroupSubCommand {
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return Commands.literal("players").executes(context -> {
 
-            Entity executor = context.getSource().getExecutor();
+            ContextResult ctx = this.getContext(context);
             SharedGroup group = this.plugin.getGroup();
 
-            if (!(executor instanceof Player player)) {
+            if (!(ctx.entity() instanceof Player player)) {
                 return Command.SINGLE_SUCCESS;
             }
 
             if (!group.getPlayersId().contains(player.getUniqueId())) {
-                player.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                return 0;
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, player);
             }
 
             var players = group.getOnlinePlayers();

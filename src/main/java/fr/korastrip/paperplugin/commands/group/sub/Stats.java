@@ -4,11 +4,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Comparator;
@@ -23,19 +23,19 @@ public class Stats extends GroupSubCommand {
     public LiteralArgumentBuilder<CommandSourceStack> build() {
         return Commands.literal("leaderboard").executes(context -> {
 
-            Entity executor = context.getSource().getExecutor();
+            ContextResult ctx = this.getContext(context);
             SharedGroup group = this.plugin.getGroup();
 
-            if (!(executor instanceof Player player)) {
+            if (!(ctx.entity() instanceof Player player)) {
                 return 0;
             }
 
             if(!group.getPlayersId().contains(player.getUniqueId())) {
-                return this.generateError("You do not have permission to use this command.", player);
+                return this.generateError(ErrorMessage.NOT_IN_GROUP, player);
             }
 
             if(!group.getIsPlaying()) {
-                return this.generateError("Currently there not game launched.", player);
+                return this.generateError(ErrorMessage.NO_GAME_RUNNING, player);
             }
 
             var playerPerScore = group.getOnlinePlayers().stream().sorted(Comparator.comparingInt(group::getPlayerDeaths).reversed()).toList();

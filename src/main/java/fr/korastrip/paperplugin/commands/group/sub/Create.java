@@ -4,11 +4,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -24,24 +23,22 @@ public class Create extends GroupSubCommand {
         return Commands.literal(this.name)
                 .requires(source -> source.getSender().isOp())
                 .executes(context -> {
-                    CommandSender sender = context.getSource().getSender();
-                    Entity executor = context.getSource().getExecutor();
+                    ContextResult ctx = this.getContext(context);
                     SharedGroup group = this.plugin.getGroup();
 
-                    if (!(executor instanceof Player player)) {
+                    if (!(ctx.entity() instanceof Player player)) {
                         return Command.SINGLE_SUCCESS;
                     }
 
                     if(!group.getPlayersId().isEmpty()) {
-                        sender.sendRichMessage("<red>A group already exists. You cannot create another one.</red>");
-                        return Command.SINGLE_SUCCESS;
+                        return this.generateError(ErrorMessage.GROUP_ALREADY_EXISTS, ctx.sender());
                     }
 
                     UUID playerUUID = player.getUniqueId();
                     group.addPlayer(playerUUID);
                     group.setOwnerUuid(playerUUID);
 
-                    sender.sendRichMessage("<green>Your group has been created.</green>\n<white>Invite players with <gold>/sharedgroup invite [player]</gold>.</white>");
+                    ctx.sender().sendRichMessage("<green>Your group has been created.</green>\n<white>Invite players with <gold>/sharedgroup invite [player]</gold>.</white>");
                     return Command.SINGLE_SUCCESS;
                 });
     }

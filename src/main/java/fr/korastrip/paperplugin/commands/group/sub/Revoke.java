@@ -4,10 +4,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.commands.group.GroupSubCommand;
+import fr.korastrip.paperplugin.enums.ErrorMessage;
 import fr.korastrip.paperplugin.model.SharedGroup;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class Revoke extends GroupSubCommand {
@@ -21,16 +21,15 @@ public class Revoke extends GroupSubCommand {
         return Commands.literal("revoke")
                 .executes(context -> {
 
-                    Entity executor = context.getSource().getExecutor();
+                    ContextResult ctx = this.getContext(context);
                     SharedGroup group = this.plugin.getGroup();
 
-                    if (!(executor instanceof Player player)) {
+                    if (!(ctx.entity() instanceof Player player)) {
                         return Command.SINGLE_SUCCESS;
                     }
 
                     if (!player.getUniqueId().equals(group.getOwnerUuid())) {
-                        player.sendRichMessage("<red>You do not have permission to use this command.</red>");
-                        return Command.SINGLE_SUCCESS;
+                        return this.generateError(ErrorMessage.NOT_OWNER, player);
                     }
 
                     group.getOnlinePlayers().forEach(p -> {
