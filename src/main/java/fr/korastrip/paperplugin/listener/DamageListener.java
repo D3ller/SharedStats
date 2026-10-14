@@ -38,7 +38,8 @@ public class DamageListener implements Listener {
             }
 
             var finalDamage = event.getFinalDamage();
-            event.setCancelled(true);
+            event.setDamage(0);
+
             var newHealth = group.getHealth() - finalDamage;
 
             List<Player> players = group.getOnlinePlayers();
