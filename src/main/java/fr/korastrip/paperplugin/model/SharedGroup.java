@@ -113,7 +113,7 @@ public class SharedGroup {
     }
 
     public void syncHealth() {
-        this.getOnlinePlayers().forEach(p -> p.setHealth(this.getHealth()));
+        this.getOnlinePlayers().stream().filter(p -> !p.isDead()).forEach(p -> p.setHealth(this.getHealth()));
     }
 
     public void addPlayerDeath(Player player) {

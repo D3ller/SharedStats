@@ -2,18 +2,13 @@ package fr.korastrip.paperplugin.listener;
 
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.model.SharedGroup;
-import fr.korastrip.paperplugin.services.TotemService;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.title.Title;
+import fr.korastrip.paperplugin.services.SharedHealthService;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-
-import java.util.List;
 
 public class DamageListener implements Listener {
 
@@ -23,7 +18,7 @@ public class DamageListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onDamageReceive(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
 
@@ -34,67 +29,23 @@ public class DamageListener implements Listener {
 
             if (group.isGroupDying) {
                 event.setCancelled(true);
-                return;
             }
+        }
+    }
 
-            var finalDamage = event.getFinalDamage();
-            event.setDamage(0);
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDamageApplied(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player) {
 
-            var newHealth = group.getHealth() - finalDamage;
+            SharedGroup group = this.plugin.getGroup();
+            if (!group.getIsPlaying()) return;
+            if (!group.getPlayersId().contains(player.getUniqueId())) return;
 
-            List<Player> players = group.getOnlinePlayers();
-
-            if (newHealth <= 0) {
-
-                TotemService totemService = new TotemService(plugin);
-
-                if(totemService.check()) {
-                    totemService.applyEffect();
-                    return;
-                }
-
-                group.isGroupDying = true;
-
-                Bukkit.getScheduler().runTask(
-                        plugin,
-                        () -> {
-                            if (group.getIsPlaying()) {
-                                players.forEach(Player::kill);
-                            }
-                        }
-                );
-
-                final Component mainTitle = player.displayName()
-                        .color(NamedTextColor.RED);
-                final Component subtitle = Component.text("is dead", NamedTextColor.WHITE);
-                final Title title = Title.title(mainTitle, subtitle);
-
-                group.addPlayerDeath(player);
-
-                players.forEach(p -> {
-                    p.showTitle(title);
-
-                    p.playSound(
-                            p.getLocation(),
-                            Sound.ENTITY_WITHER_SPAWN,
-                            1.0f,
-                            1.0f
-                    );
-                });
-                group.incrementsDeadCount();
-
-                return;
-            }
-
-            group.setHealth(newHealth);
-            group.syncHealth();
-            player.playHurtAnimation(0);
-
-            player.playSound(
-                    player.getLocation(),
-                    Sound.ENTITY_PLAYER_HURT,
-                    1.0f,
-                    1.0f
+            Bukkit.getScheduler().runTask(plugin,
+                    () -> {
+                        SharedHealthService sharedHealthService = new SharedHealthService(this.plugin);
+                        sharedHealthService.shareLoss();
+                    }
             );
         }
     }
