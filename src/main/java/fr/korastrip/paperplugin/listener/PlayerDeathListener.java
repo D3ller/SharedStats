@@ -25,7 +25,7 @@ public class PlayerDeathListener implements Listener {
         if (!group.getIsPlaying()) return;
         if (!group.getPlayersId().contains(player.getUniqueId())) return;
 
-        if(!group.isGroupDying) {
+        if(!group.isGroupDying && this.plugin.getSynchronizationConfig().isEnabled("health")) {
             SharedHealthService sharedHealthService = new SharedHealthService(this.plugin);
             sharedHealthService.groupDeath(player);
         }

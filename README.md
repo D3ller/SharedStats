@@ -20,6 +20,8 @@
 | `/sharedgroup stop` | Stop an active game without deleting the group | Group owner |
 | `/sharedgroup players` | List the online players in your group | Group member |
 | `/sharedgroup leaderboard` | Show the group's death leaderboard during a game | Group member |
+| `/sharedgroup enable <health\|food\|potions>` | Enable synchronization for a stat, outside a game | OP |
+| `/sharedgroup disable <health\|food\|potions>` | Disable synchronization for a stat, outside a game | OP |
 | `/sharedgroup version` | Display the plugin version | None |
 
 ## What remains to be done

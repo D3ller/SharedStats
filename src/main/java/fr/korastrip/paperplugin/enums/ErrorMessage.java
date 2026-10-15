@@ -13,7 +13,10 @@ public enum ErrorMessage {
     PLAYER_ALREADY_IN_GROUP("This player is already in the group."),
     PLAYER_NOT_IN_GROUP("This player is not in the group."),
     CANNOT_REMOVE_YOURSELF("You cannot remove yourself. Use <gold>/" + Config.PREFIX + " revoke</gold> instead."),
-    NOT_ENOUGH_PLAYERS("You cannot start a game alone. Invite at least one player.");
+    NOT_ENOUGH_PLAYERS("You cannot start a game alone. Invite at least one player."),
+    SYNC_ALREADY_ENABLED("<stat> synchronization is already enabled."),
+    SYNC_ALREADY_DISABLED("<stat> synchronization is already disabled."),
+    CONFIG_SAVE_FAILED("Could not save the configuration.");
 
     private final String message;
 

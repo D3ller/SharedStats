@@ -20,6 +20,8 @@ public class RegenerationListener implements Listener {
     public void onRegeneration(EntityRegainHealthEvent event) {
         SharedGroup group = this.plugin.getGroup();
 
+        if (!plugin.getSynchronizationConfig().isEnabled("health")) return;
+
         if (event.getEntity() instanceof Player player) {
             if(group.getPlayersId().contains(player.getUniqueId()) && group.getIsPlaying()) {
 

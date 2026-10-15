@@ -1,0 +1,4 @@
+synchronization:
+  health: true
+  food: true
+  potions: true
