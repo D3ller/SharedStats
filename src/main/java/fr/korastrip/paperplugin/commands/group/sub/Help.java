@@ -37,7 +37,9 @@ public class Help extends GroupSubCommand {
                     new Stop(plugin),
                     new Players(plugin),
                     new Version(plugin),
-                    new Stats(plugin)
+                    new Stats(plugin),
+                    new Enable(plugin),
+                    new Disable(plugin)
             );
 
             commands.forEach(command -> ctx.sender().sendRichMessage("<gold><usage></gold><white>: <description></white>", Placeholder.unparsed("description", command.getDescription()), Placeholder.unparsed("usage", command.getUsage())));

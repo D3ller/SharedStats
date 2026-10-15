@@ -13,14 +13,18 @@ public final class SharedStats extends JavaPlugin implements Listener {
 
     private final SharedGroup group = new SharedGroup();
     GroupCommand groupCommand = new GroupCommand(this);
+    private SynchronizationConfig synchronizationConfig;
 
     public SharedGroup getGroup() {
         return group;
     }
+    public SynchronizationConfig getSynchronizationConfig() {
+        return synchronizationConfig;
+    }
 
     @Override
     public void onEnable() {
-
+        synchronizationConfig = new SynchronizationConfig(this);
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
@@ -34,13 +38,4 @@ public final class SharedStats extends JavaPlugin implements Listener {
                 event -> event.registrar().register(groupCommand.create())
         );
     }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendPlainMessage("Hello, " + event.getPlayer().getName());
-        this.getLogger().info("Health: " + event.getPlayer().getHealth());
-        this.getLogger().info("Food Level: " + event.getPlayer().getFoodLevel());
-        this.getLogger().info("Saturation: " + event.getPlayer().getSaturation());
-    }
-
 }

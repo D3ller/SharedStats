@@ -28,8 +28,10 @@ public class PlayerRespawnListener implements Listener {
                     plugin,
                     () -> {
                         if (group.getOnlinePlayers().size() == group.getRespawnedPlayers().size()) {
-                            group.setHealth(20);
-                            group.syncHealth();
+                            if (plugin.getSynchronizationConfig().isEnabled("health")) {
+                                group.setHealth(20);
+                                group.syncHealth();
+                            }
                             group.clearRespawnedPlayers();
                             group.isGroupDying = false;
                         }
