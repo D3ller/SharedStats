@@ -2,6 +2,7 @@ package fr.korastrip.paperplugin.listener;
 
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.model.SharedGroup;
+import fr.korastrip.paperplugin.services.SharedHealthService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +24,10 @@ public class RegenerationListener implements Listener {
             if(group.getPlayersId().contains(player.getUniqueId()) && group.getIsPlaying()) {
 
                 event.setCancelled(true);
+                SharedHealthService sharedHealthService = new SharedHealthService(this.plugin);
+                sharedHealthService.shareLoss();
+
+                if(group.isGroupDying) return;
 
                 double healthAmount = event.getAmount();
 
