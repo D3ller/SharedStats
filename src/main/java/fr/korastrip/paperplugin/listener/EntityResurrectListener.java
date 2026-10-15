@@ -20,6 +20,8 @@ public class EntityResurrectListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityResurrect(EntityResurrectEvent e) {
+        if(!this.plugin.getSynchronizationConfig().isEnabled("health")) return;
+
         if (e.getEntity() instanceof Player player) {
 
             TotemService totemService = new TotemService(this.plugin);

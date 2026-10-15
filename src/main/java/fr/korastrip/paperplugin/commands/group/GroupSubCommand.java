@@ -45,8 +45,8 @@ public abstract class GroupSubCommand {
         return 0;
     }
 
-    public int generateError(ErrorMessage error, CommandSender player) {
-        return this.generateError(error.getMessage(), player);
+    public int generateError(ErrorMessage error, CommandSender player, TagResolver... resolvers) {
+        return this.generateError(error.getMessage(), player, resolvers);
     }
 
     public String getUsage() {

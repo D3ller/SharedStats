@@ -56,7 +56,7 @@ public class SharedHealthService {
 
     public void shareLoss() {
         SharedGroup group = this.plugin.getGroup();
-
+        if(!plugin.getSynchronizationConfig().isEnabled("health")) return;
         if (!group.getIsPlaying() || group.isGroupDying) return;
 
         double totalLost = 0;
