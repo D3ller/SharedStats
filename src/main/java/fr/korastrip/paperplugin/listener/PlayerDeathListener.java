@@ -2,6 +2,7 @@ package fr.korastrip.paperplugin.listener;
 
 import fr.korastrip.paperplugin.SharedStats;
 import fr.korastrip.paperplugin.model.SharedGroup;
+import fr.korastrip.paperplugin.services.SharedHealthService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,11 @@ public class PlayerDeathListener implements Listener {
 
         if (!group.getIsPlaying()) return;
         if (!group.getPlayersId().contains(player.getUniqueId())) return;
+
+        if(!group.isGroupDying) {
+            SharedHealthService sharedHealthService = new SharedHealthService(this.plugin);
+            sharedHealthService.groupDeath(player);
+        }
 
         Bukkit.getScheduler().runTaskLater(
                 plugin,
