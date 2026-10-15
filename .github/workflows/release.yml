@@ -60,11 +60,35 @@ jobs:
               --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
           fi
 
-      - name: Publish the Modrinth version
+      - name: Read the release changelog
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "jar=$(ls build/libs/*.jar)"
+            echo "changelog<<CHANGELOG_EOF"
+            gh release view "$GITHUB_REF_NAME" --json body --jq .body
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish the Modrinth version
+        env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_CHANGELOG: ${{ steps.release.outputs.changelog }}
         run: |
           test -n "$MODRINTH_TOKEN"
-          MODRINTH_CHANGELOG="$(gh release view "$GITHUB_REF_NAME" --json body --jq .body)" \
-            ./gradlew modrinth
+          ./gradlew modrinth
+
+      - name: Publish the CurseForge file
+        uses: itsmeow/curseforge-upload@v3.1.2
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: "1741500"
+          game_endpoint: bukkit
+          game_versions: "26.2"
+          file_path: ${{ steps.release.outputs.jar }}
+          display_name: SharedStats ${{ github.ref_name }}
+          release_type: release
+          changelog: ${{ steps.release.outputs.changelog }}
+          changelog_type: markdown
