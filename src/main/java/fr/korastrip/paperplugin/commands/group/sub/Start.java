@@ -49,6 +49,9 @@ public class Start extends GroupSubCommand {
             group.setHealth(20.0);
             group.syncHealth();
 
+            group.setFood(20);
+            group.syncFood();
+
             players.forEach(p -> {
 
                 p.playSound(
@@ -57,6 +60,8 @@ public class Start extends GroupSubCommand {
                         1f,
                         1f
                 );
+
+                p.setSaturation(20.0f);
 
                 p.sendRichMessage("<green>The game has started.</green> <white>Do not die!</white>");
             });

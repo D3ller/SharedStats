@@ -43,7 +43,14 @@ public class SharedGroup {
     }
 
 
-    private final double groupFood = 20.0;
+    private int groupFood = 20;
+    public void setFood(int food) {
+        this.groupFood = food;
+    }
+    public int getFood() {
+        return this.groupFood;
+    }
+
     private int deadCount = 0;
 
     public int getDeadCount() {
@@ -114,6 +121,10 @@ public class SharedGroup {
 
     public void syncHealth() {
         this.getOnlinePlayers().stream().filter(p -> !p.isDead()).forEach(p -> p.setHealth(this.getHealth()));
+    }
+
+    public void syncFood() {
+        this.getOnlinePlayers().stream().filter(p -> !p.isDead()).forEach(p -> p.setFoodLevel(this.getFood()));
     }
 
     public void addPlayerDeath(Player player) {
