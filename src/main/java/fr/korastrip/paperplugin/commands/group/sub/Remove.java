@@ -38,7 +38,7 @@ public class Remove extends GroupSubCommand {
                                 return this.generateError(ErrorMessage.NO_GROUP, ctx.sender());
                             }
 
-                            if (!group.getOwnerUuid().equals(player.getUniqueId())) {
+                            if (!player.getUniqueId().equals(group.getOwnerUuid())) {
                                 return this.generateError(ErrorMessage.NOT_OWNER, ctx.sender());
                             }
 
