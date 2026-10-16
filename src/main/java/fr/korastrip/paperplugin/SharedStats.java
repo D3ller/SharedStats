@@ -32,6 +32,8 @@ public final class SharedStats extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(new RegenerationListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityResurrectListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryClickListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryDragListener(), this);
 
         this.getLifecycleManager().registerEventHandler(
                 LifecycleEvents.COMMANDS,

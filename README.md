@@ -22,6 +22,7 @@
 | `/sharedgroup leaderboard` | Show the group's death leaderboard during a game | Group member |
 | `/sharedgroup enable <health\|food\|potions>` | Enable synchronization for a stat, outside a game | OP |
 | `/sharedgroup disable <health\|food\|potions>` | Disable synchronization for a stat, outside a game | OP |
+| `/sharedgroup configuration` | Open the synchronization settings menu, outside a game | OP, group owner |
 | `/sharedgroup version` | Display the plugin version | None |
 
 ## What remains to be done
