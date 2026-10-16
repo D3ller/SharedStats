@@ -32,6 +32,10 @@ public class PlayerRespawnListener implements Listener {
                                 group.setHealth(20);
                                 group.syncHealth();
                             }
+                            if(plugin.getSynchronizationConfig().isEnabled("food")) {
+                                group.setFood(20);
+                                group.syncFood();
+                            }
                             group.clearRespawnedPlayers();
                             group.isGroupDying = false;
                         }
