@@ -63,6 +63,10 @@ public class SynchronizationConfig {
         }
     }
 
+    public boolean toggle(String stat) {
+        return setEnabled(stat, !isEnabled(stat));
+    }
+
     private String getKey(String stat) {
         String normalizedStat = stat.toLowerCase(Locale.ROOT);
 

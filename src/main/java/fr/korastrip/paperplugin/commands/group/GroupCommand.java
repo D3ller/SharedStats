@@ -28,6 +28,7 @@ public class GroupCommand {
                 .then(new Stats(plugin).build())
                 .then(new Enable(plugin).build())
                 .then(new Disable(plugin).build())
+                .then(new Configuration(plugin).build())
                 .build();
 
     }
