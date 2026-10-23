@@ -38,13 +38,18 @@ public class PlayerQuitListener implements Listener {
                 group.resetGroup();
                 return;
             }
-            group.removePlayer(playerId);
-            if (group.getIsPlaying() && group.getOnlinePlayers().size() < 2) {
-                group.getOnlinePlayers().forEach(p -> {
-                    p.sendRichMessage("<white>The group has been disbanded because there are not enough players to continue.</white>");
-                });
-                group.resetGroup();
-            }
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!group.getIsPlaying()) {
+                    group.removePlayer(playerId);
+                }
+                if (group.getIsPlaying() && group.getOnlinePlayers().size() < 2) {
+                    group.getOnlinePlayers().forEach(p -> {
+                        p.sendRichMessage("<white>The group has been disbanded because there are not enough players to continue.</white>");
+                    });
+                    group.resetGroup();
+                }
+            });
         }
     }
 }
